@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class InteractionController : MonoBehaviour
 {
-    public static PlayerController Instance;
+    public static InteractionController Instance;
 
     public event Action Action;
 
@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
         Instance = this;
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetButtonDown("Action"))
         {
