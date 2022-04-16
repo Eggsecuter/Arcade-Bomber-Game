@@ -8,12 +8,12 @@ public class LevelGenerator : MonoBehaviour
     public const float TileSize = .4f;
     public const int Columns = 3, Rows = 5, MaxStraightPath = 1;
 
-    [SerializeField]
-    private GameObject _wall = null;
-    [SerializeField]
-    private GameObject _path = null;
+    [SerializeField] private GameObject _wall = null;
+    [SerializeField] private GameObject _path = null;
+    [SerializeField] private GameObject _bomb = null;
+    public int PathTilesToPlayer = 0;
 
-    private GameObject[,] _level = new GameObject[Columns, Rows];
+    private readonly GameObject[,] _level = new GameObject[Columns, Rows];
     // Defines rules for next line
     private int _countStraightPath = 0;
     private int _lastRowEnd = 1;
@@ -91,34 +91,27 @@ public class LevelGenerator : MonoBehaviour
     /// </summary>
     private void CreateNextRow(RowMovement movement)
     {
-        int pathStartIndex = _lastRowEnd;
-
-        if (!movement.HeadRight)
-            pathStartIndex -= movement.Distance;
-
-        int pathEndIndex = pathStartIndex + movement.Distance;
-
-        for (int column = 0; column < Columns; column++)
-        {
-            if (column < pathStartIndex || column > pathEndIndex)
-            {
-                // Place Wall
-                PlaceTile(_wall, column);
-            }
-            else
-            {
-                // Place Path
-                PlaceTile(_path, column);
-            }
-        }
-
         // Set rules for next line
         if (movement.HeadRight)
         {
+            for (int column = 0; column < Columns; column++)
+            {
+                bool isPath = column >= _lastRowEnd && column <= _lastRowEnd + movement.Distance;
+
+                PlaceTile(isPath, column);
+            }
+
             _lastRowEnd += movement.Distance;
         }
         else
         {
+            for (int column = Columns; column--> 0;)
+            {
+                bool isPath = column <= _lastRowEnd && column >= _lastRowEnd - movement.Distance;
+
+                PlaceTile(isPath, column);
+            }
+
             _lastRowEnd -= movement.Distance;
         }
 
@@ -126,9 +119,22 @@ public class LevelGenerator : MonoBehaviour
         _leftAllowed = _lastRowEnd != 0 && movement.Distance == 0;
     }
 
-    private void PlaceTile(GameObject tile, int column)
+    private void PlaceTile(bool isPath, int column)
     {
+        var tile = isPath ? _path : _wall;
         Vector3 position = transform.position + new Vector3(column * TileSize, 0);
+
         _level[column, 0] = Instantiate(tile, position, Quaternion.identity, transform);
+
+        if (isPath)
+        {
+            if (PathTilesToPlayer >= 2 && Random.Range(0, 4) == 0)
+            {
+                var bomb = Instantiate(_bomb, _level[column, 0].transform);
+                bomb.GetComponent<Bomb>().TilesToPlayer = PathTilesToPlayer;
+            }
+
+            PathTilesToPlayer++;
+        }
     }
 }

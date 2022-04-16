@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public LevelGenerator generator;
+    public LevelGenerator Generator;
 
     private readonly Queue<RowMovement> _movements = new Queue<RowMovement>();
     private RowMovement _movement;
@@ -19,17 +20,22 @@ public class PlayerMovement : MonoBehaviour
 
         _movement = _movements.Dequeue();
 
-        // Start Interaction
-        InteractionController.Instance.Action += UpdatePosition;
+        // Start interaction
+        LevelClock.Instance.Moved += UpdatePosition;
     }
 
     private void OnDestroy()
     {
-        InteractionController.Instance.Action -= UpdatePosition;
+        LevelClock.Instance.Moved -= UpdatePosition;
     }
 
-    private void UpdatePosition()
+    private void UpdatePosition(bool moved)
     {
+        if (!moved)
+            return;
+
+        Generator.PathTilesToPlayer--;
+
         if (_movement.Distance == 0)
         {
             MoveUp();
@@ -48,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
     private void MoveUp()
     {
         _movements.Enqueue(
-            generator.NextRow()
+            Generator.NextRow()
         );
     }
 }
