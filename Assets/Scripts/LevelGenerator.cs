@@ -8,13 +8,16 @@ public class LevelGenerator : MonoBehaviour
     public const float TileSize = .4f;
     public const int Columns = 3, Rows = 5, MaxStraightPath = 1;
 
+    [HideInInspector] public int pathTilesToPlayer = 0;
+
+    [SerializeField] private Player _player = null;
     [SerializeField] private GameObject _wall = null;
     [SerializeField] private GameObject _path = null;
     [SerializeField] private GameObject _bomb = null;
-    public int PathTilesToPlayer = 0;
+    [SerializeField] private BombType[] _bombTypes = null;
 
     private readonly GameObject[,] _level = new GameObject[Columns, Rows];
-    // Defines rules for next line
+    // Rules for next line
     private int _countStraightPath = 0;
     private int _lastRowEnd = 1;
     private bool _rightAllowed = false;
@@ -128,13 +131,33 @@ public class LevelGenerator : MonoBehaviour
 
         if (isPath)
         {
-            if (PathTilesToPlayer >= 2 && Random.Range(0, 4) == 0)
+            if (pathTilesToPlayer >= 2)
             {
-                var bomb = Instantiate(_bomb, _level[column, 0].transform);
-                bomb.GetComponent<Bomb>().TilesToPlayer = PathTilesToPlayer;
+                var bombType = GetBombType();
+
+                if (!(bombType is null))
+                {
+                    var bomb = Instantiate(_bomb, _level[column, 0].transform);
+                    bomb.GetComponent<Bomb>().Initialize(_player, pathTilesToPlayer, bombType.GetInstance());
+                }
             }
 
-            PathTilesToPlayer++;
+            pathTilesToPlayer++;
         }
+    }
+
+    private BombType GetBombType()
+    {
+        int index = Random.Range(0, 101);
+
+        foreach (BombType type in _bombTypes)
+        {
+            index -= type.SpawnProbability;
+
+            if (index <= 0)
+                return type;
+        }
+
+        return null; // place empty path
     }
 }

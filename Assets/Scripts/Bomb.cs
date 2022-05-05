@@ -4,52 +4,54 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    [Min(0)]
-    public int TriggerRange = 0;
-    [Min(1)]
-    public int TicksToExplosion = 1;
-    [Min(0)]
-    public int ExplosionRange = 0;
-
-    public int TilesToPlayer { private get; set; }
-
+    private Player _player;
+    private BombType _type;
+    private int _tilesToPlayer;
     private bool _triggered = false;
-
-    private void Start()
-    {
-        LevelClock.Instance.Moved += Tick;
-    }
 
     private void OnDestroy()
     {
-        LevelClock.Instance.Moved -= Tick;
+        LevelClock.Instance.ClockTick -= Tick;
+    }
+
+    public void Initialize(Player player, int tilesToPlayer, BombType type)
+    {
+        _player = player;
+        _tilesToPlayer = tilesToPlayer;
+        _type = type;
+        GetComponent<SpriteRenderer>().sprite = _type.Image;
+
+        LevelClock.Instance.ClockTick += Tick;
     }
 
     private void Tick(bool moved)
     {
         if (moved)
         {
-            TilesToPlayer--;
+            _tilesToPlayer--;
         }
 
-        if (_triggered || TilesToPlayer <= TriggerRange)
+        if (_triggered || _tilesToPlayer <= _type.TriggerRange)
         {
             _triggered = true;
 
-            if (TicksToExplosion == 0)
+            if (_type.TicksToExplosion == 0)
             {
                 Explode();
             }
             else
             {
-                TicksToExplosion--;
+                _type.TicksToExplosion--;
             }
         }
     }
 
     private void Explode()
     {
-        bool isInPlayerRange = Mathf.Abs(TilesToPlayer) <= ExplosionRange;
+        bool isInPlayerRange = Mathf.Abs(_tilesToPlayer) <= _type.ExplosionRange;
+
+        if (isInPlayerRange)
+            _player.TakeDamage();
 
         Destroy(gameObject);
     }

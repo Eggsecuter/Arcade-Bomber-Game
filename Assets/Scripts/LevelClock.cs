@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class LevelClock : MonoBehaviour
 {
     public static LevelClock Instance;
+    public float StartTime = 1f, IntervalTime = 1f;
+    public Player Player;
+    public event Action<bool> ClockTick;
 
-    private readonly int _startTime = 1, _intervalTime = 1;
-
-    public Image ClockImage;
-    public event Action<bool> Moved;
+    private Image _clockUI = null;
 
     private void Awake()
     {
@@ -20,19 +21,22 @@ public class LevelClock : MonoBehaviour
 
     private void Start()
     {
-        ClockImage.fillAmount = 0;
+        _clockUI = GetComponent<Image>();
+        _clockUI.fillAmount = 100;
 
-        InvokeRepeating(nameof(Tick), _startTime, _intervalTime);
+        InvokeRepeating(nameof(Tick), StartTime, IntervalTime);
     }
 
     private void Update()
     {
-        ClockImage.fillAmount += 1 / _intervalTime * Time.deltaTime;
+        _clockUI.fillAmount += 1 / IntervalTime * Time.deltaTime;
     }
 
     private void Tick()
     {
-        Moved.Invoke(Input.GetButton("Action"));
-        ClockImage.fillAmount = 0;
+        bool isMoving = Player.stamina > 0 && Input.GetButton("Action");
+
+        ClockTick.Invoke(isMoving);
+        _clockUI.fillAmount = 0;
     }
 }
