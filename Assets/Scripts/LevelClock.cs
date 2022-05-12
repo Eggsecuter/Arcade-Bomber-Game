@@ -12,24 +12,21 @@ public class LevelClock : MonoBehaviour
     public Player Player;
     public event Action<bool> ClockTick;
 
-    private Image _clockUI = null;
+    private Animator _animator = null;
 
     private void Awake()
     {
         Instance = this;
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
-        _clockUI = GetComponent<Image>();
-        _clockUI.fillAmount = 100;
+        _animator = GetComponent<Animator>();
+        _animator.speed = 0;
+        yield return new WaitForSeconds(StartTime);
+        _animator.speed = 1 / IntervalTime;
 
-        InvokeRepeating(nameof(Tick), StartTime, IntervalTime);
-    }
-
-    private void Update()
-    {
-        _clockUI.fillAmount += 1 / IntervalTime * Time.deltaTime;
+        InvokeRepeating(nameof(Tick), 0f, IntervalTime);
     }
 
     private void Tick()
@@ -37,6 +34,5 @@ public class LevelClock : MonoBehaviour
         bool isMoving = Player.stamina > 0 && Input.GetButton("Action");
 
         ClockTick.Invoke(isMoving);
-        _clockUI.fillAmount = 0;
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    public const float TileSize = .4f;
+    public float TileSize = .4f;
     public const int Columns = 3, Rows = 5, MaxStraightPath = 1;
 
     [HideInInspector] public int pathTilesToPlayer = 0;

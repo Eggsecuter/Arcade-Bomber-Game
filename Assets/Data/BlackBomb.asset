@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 415e6077a0f77da4cb5ecd667135c193, type: 3}
   m_Name: BlackBomb
   m_EditorClassIdentifier: 
-  Name: Black Bomb
   SpawnProbability: 30
   TriggerRange: 0
   TicksToExplosion: 1
-  ExplosionRange: 0
   Image: {fileID: 21300000, guid: 9ed49976b568a91479737cddfafe3a97, type: 3}

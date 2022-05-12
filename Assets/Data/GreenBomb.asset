@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 415e6077a0f77da4cb5ecd667135c193, type: 3}
   m_Name: GreenBomb
   m_EditorClassIdentifier: 
-  Name: Green Bomb
   SpawnProbability: 5
   TriggerRange: 1
-  TicksToExplosion: 0
-  ExplosionRange: 1
+  TicksToExplosion: 2
   Image: {fileID: 21300000, guid: 1c18a0e2ce9b7c4408bd9fed8e33e163, type: 3}

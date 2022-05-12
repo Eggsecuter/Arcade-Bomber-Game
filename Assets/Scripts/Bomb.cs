@@ -8,6 +8,12 @@ public class Bomb : MonoBehaviour
     private BombType _type;
     private int _tilesToPlayer;
     private bool _triggered = false;
+    private Animator _animator;
+
+    private void Start()
+    {
+        _animator = GetComponent<Animator>();
+    }
 
     private void OnDestroy()
     {
@@ -31,10 +37,14 @@ public class Bomb : MonoBehaviour
             _tilesToPlayer--;
         }
 
-        if (_triggered || _tilesToPlayer <= _type.TriggerRange)
+        if (!_triggered && _tilesToPlayer <= _type.TriggerRange)
         {
             _triggered = true;
-
+            _animator.SetBool("IsTicking", true);
+        }
+        
+        if (_triggered)
+        {
             if (_type.TicksToExplosion == 0)
             {
                 Explode();
@@ -48,11 +58,14 @@ public class Bomb : MonoBehaviour
 
     private void Explode()
     {
-        bool isInPlayerRange = Mathf.Abs(_tilesToPlayer) <= _type.ExplosionRange;
-
-        if (isInPlayerRange)
+        if (_tilesToPlayer == 0)
             _player.TakeDamage();
 
+        _animator.SetBool("IsExploding", true);
+    }
+
+    private void Destroy()
+    {
         Destroy(gameObject);
     }
 }

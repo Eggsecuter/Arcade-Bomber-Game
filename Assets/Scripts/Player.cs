@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         else
         {
             int direction = _movement.HeadRight ? 1 : -1;
-            transform.position += new Vector3(direction * LevelGenerator.TileSize, 0);
+            transform.position += new Vector3(direction * Generator.TileSize, 0);
 
             _movement.Distance -= 1;
         }
