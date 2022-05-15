@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
         stamina = maxStamina;
 
         // Initialize level
-        for (int i = 0; i < LevelGenerator.Rows; i++)
+        for (int i = 0; i < Generator.Rows; i++)
         {
             _movements.Enqueue(Generator.NextRow());
         }
@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         else
         {
             int direction = _movement.HeadRight ? 1 : -1;
-            transform.position += new Vector3(direction * Generator.TileSize, 0);
+            ((RectTransform)transform).pivot += new Vector2(1f / (direction * (Generator.Columns -1)), 0);
 
             _movement.Distance -= 1;
         }

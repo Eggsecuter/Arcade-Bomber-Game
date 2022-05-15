@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelGenerator : MonoBehaviour
 {
-    public float TileSize = .4f;
-    public const int Columns = 3, Rows = 5, MaxStraightPath = 1;
+    public Transform tileParent;
+    public int Columns = 3, Rows = 5, MaxStraightPath = 1;
 
     [HideInInspector] public int pathTilesToPlayer = 0;
 
@@ -16,19 +17,26 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private GameObject _bomb = null;
     [SerializeField] private BombType[] _bombTypes = null;
 
-    private readonly GameObject[,] _level = new GameObject[Columns, Rows];
+    private RectTransform[,] _level = null;
     // Rules for next line
     private int _countStraightPath = 0;
     private int _lastRowEnd = 1;
     private bool _rightAllowed = false;
     private bool _leftAllowed = false;
 
+    private void Awake()
+    {
+        _level = new RectTransform[Columns, Rows];
+    }
+
     public RowMovement NextRow()
     {
         // Destroy bottom row
         for (int column = 0; column < Columns; column++)
         {
-            Destroy(_level[column, Rows - 1]);
+            var gameObject = _level[column, Rows - 1]?.gameObject;
+            if (gameObject != null)
+                Destroy(gameObject);
         }
 
         // Replace middle rows
@@ -36,12 +44,12 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int column = 0; column < Columns; column++)
             {
-                GameObject tileAbove = _level[column, row - 1];
+                RectTransform tileAbove = _level[column, row - 1];
 
                 if (tileAbove)
                 {
                     _level[column, row] = tileAbove;
-                    tileAbove.transform.position += new Vector3(0, -TileSize);
+                    tileAbove.pivot -= new Vector2(0, 1f / (Rows -1));
                 }
             }
         }
@@ -125,9 +133,9 @@ public class LevelGenerator : MonoBehaviour
     private void PlaceTile(bool isPath, int column)
     {
         var tile = isPath ? _path : _wall;
-        Vector3 position = transform.position + new Vector3(column * TileSize, 0);
 
-        _level[column, 0] = Instantiate(tile, position, Quaternion.identity, transform);
+        _level[column, 0] = (RectTransform)Instantiate(tile, tileParent).transform;
+        _level[column, 0].pivot = new Vector2(1f / (Columns -1) * column, 1);
 
         if (isPath)
         {

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bomb : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class Bomb : MonoBehaviour
         _player = player;
         _tilesToPlayer = tilesToPlayer;
         _type = type;
-        GetComponent<SpriteRenderer>().sprite = _type.Image;
+        GetComponent<Image>().sprite = _type.Image;
 
         LevelClock.Instance.ClockTick += Tick;
     }
