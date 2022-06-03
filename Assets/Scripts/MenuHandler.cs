@@ -5,28 +5,57 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using System;
 
 public class MenuHandler : MonoBehaviour
 {
-    public Button[] menuButtons;
-    public AudioClip navigateSound;
-    public AudioClip selectSound;
+    [Header("Menu")]
+    public GameObject mainMenu;
+    public GameObject optionsMenu;
+
+    [Header("Sound")]
     public AudioSource audioSource;
+    public AudioClip navigateSound;
+    public AudioClip changeOptionSound;
+    public AudioClip selectSound;
+
+    private GameObject lastSelected = null;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        EventSystem.current.SetSelectedGameObject(menuButtons[0].gameObject);
+        mainMenu.SetActive(true);
+        optionsMenu.SetActive(false);
+
+        EventSystem.current.SetSelectedGameObject(
+            mainMenu.transform.GetChild(0).gameObject
+        );
     }
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow))
+        if (EventSystem.current.currentSelectedGameObject == null)
+        {
+            EventSystem.current.SetSelectedGameObject(lastSelected);
+        }
+        else
+        {
+            lastSelected = EventSystem.current.currentSelectedGameObject;
+        }
+
+
+        if (Input.GetButtonDown("Vertical"))
         {
             audioSource.Stop();
             audioSource.PlayOneShot(navigateSound);
+        }
+
+        if (!mainMenu.activeSelf && Input.GetButtonDown("Horizontal"))
+        {
+            audioSource.Stop();
+            audioSource.PlayOneShot(changeOptionSound);
         }
 
         if (Input.GetButtonUp("Submit"))
@@ -36,20 +65,9 @@ public class MenuHandler : MonoBehaviour
         }
     }
 
-    public void Play()
+    public IEnumerator ButtonDelay(Action callback)
     {
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex + 1
-        );
-    }
-
-    public void OpenSettings()
-    {
-        print("Not implemented yet");
-    }
-
-    public void Quit()
-    {
-        Application.Quit();
+        yield return new WaitForSeconds(selectSound.length);
+        callback();
     }
 }
