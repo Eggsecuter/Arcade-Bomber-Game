@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class Bomb : MonoBehaviour
 {
+    [SerializeField] private AudioClip[] _explosionSounds = null;
+
+    private AudioSource _audioSource = null;
     private Player _player;
     private BombType _type;
     private int _tilesToPlayer;
@@ -14,6 +17,8 @@ public class Bomb : MonoBehaviour
     private void Start()
     {
         _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.clip = _explosionSounds[Random.Range(0, _explosionSounds.Length)];
     }
 
     private void OnDestroy()
@@ -26,7 +31,7 @@ public class Bomb : MonoBehaviour
         _player = player;
         _tilesToPlayer = tilesToPlayer;
         _type = type;
-        GetComponent<Image>().sprite = _type.Image;
+        GetComponent<Image>().overrideSprite = _type.Image;
 
         LevelClock.Instance.ClockTick += Tick;
     }
@@ -59,9 +64,13 @@ public class Bomb : MonoBehaviour
 
     private void Explode()
     {
+        if (_audioSource.enabled)
+            _audioSource.Play();
+
         if (_tilesToPlayer == 0)
             _player.TakeDamage();
 
+        GetComponent<Image>().overrideSprite = null;
         _animator.SetBool("IsExploding", true);
     }
 

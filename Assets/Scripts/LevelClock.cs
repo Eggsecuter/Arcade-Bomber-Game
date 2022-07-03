@@ -13,6 +13,7 @@ public class LevelClock : MonoBehaviour
     public event Action<bool> ClockTick;
 
     private Animator _animator = null;
+    private AudioSource _audioSource = null;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class LevelClock : MonoBehaviour
 
     private IEnumerator Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         _animator = GetComponent<Animator>();
         _animator.speed = 0;
         yield return new WaitForSeconds(StartTime);
@@ -32,6 +34,8 @@ public class LevelClock : MonoBehaviour
     private void Tick()
     {
         bool isMoving = Player.stamina > 0 && Input.GetButton("Action");
+
+        _audioSource.Play();
 
         ClockTick.Invoke(isMoving);
     }

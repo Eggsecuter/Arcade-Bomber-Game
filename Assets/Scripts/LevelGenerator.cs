@@ -16,6 +16,8 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private GameObject _path = null;
     [SerializeField] private GameObject _bomb = null;
     [SerializeField] private BombType[] _bombTypes = null;
+    [SerializeField] private Sprite[] _pathSprites = null;
+    [SerializeField] private Sprite[] _grassSprites = null;
 
     private RectTransform[,] _level = null;
     // Rules for next line
@@ -133,6 +135,8 @@ public class LevelGenerator : MonoBehaviour
     private void PlaceTile(bool isPath, int column)
     {
         var tile = isPath ? _path : _wall;
+        tile.GetComponent<Image>().sprite = isPath ? _pathSprites[Random.Range(0, _pathSprites.Length)] :
+            _grassSprites[Random.Range(0, _grassSprites.Length)];
 
         _level[column, 0] = (RectTransform)Instantiate(tile, tileParent).transform;
         _level[column, 0].pivot = new Vector2(1f / (Columns -1) * column, 1);

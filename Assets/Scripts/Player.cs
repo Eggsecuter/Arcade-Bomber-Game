@@ -13,12 +13,15 @@ public class Player : MonoBehaviour
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private int maxStamina = 3;
 
+    private AudioSource _audioSource = null;
     private readonly Queue<RowMovement> _movements = new Queue<RowMovement>();
     private RowMovement _movement;
     private int _health;
 
     private void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
+
         // Initialize stats
         _health = maxHealth;
         stamina = maxStamina;
@@ -42,6 +45,7 @@ public class Player : MonoBehaviour
 
     public void TakeDamage()
     {
+        _audioSource.Play();
         _health--;
         healthUI.fillAmount = 1f / maxHealth * _health;
 
