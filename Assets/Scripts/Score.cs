@@ -6,9 +6,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Text))]
 public class Score : MonoBehaviour
 {
+    [HideInInspector] public int score = 0;
     private AudioSource _audioSource;
     private Text ScoreUI = null;
-    private int score = 0;
     private Color originalColor;
 
     void Start()

@@ -27,7 +27,8 @@ public class MenuHandler : MonoBehaviour
         Cursor.visible = false;
 
         mainMenu.SetActive(true);
-        optionsMenu.SetActive(false);
+        if (optionsMenu != null)
+            optionsMenu.SetActive(false);
 
         EventSystem.current.SetSelectedGameObject(
             mainMenu.transform.GetChild(0).gameObject
@@ -44,7 +45,6 @@ public class MenuHandler : MonoBehaviour
         {
             lastSelected = EventSystem.current.currentSelectedGameObject;
         }
-
 
         if (Input.GetButtonDown("Vertical"))
         {

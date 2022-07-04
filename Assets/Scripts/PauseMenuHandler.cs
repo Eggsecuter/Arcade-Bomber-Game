@@ -1,28 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class MainMenuHandler : MonoBehaviour
+public class PauseMenuHandler : MonoBehaviour
 {
-    public Text highScoreUI;
     [SerializeField] private MenuHandler menuHandler = null;
     [SerializeField] private GameObject fistSelected = null;
 
-    private void Start()
+    public void Resume()
     {
-        int highscore = PlayerPrefs.GetInt("Highscore", 0);
-        highScoreUI.text = $"High Score: {highscore}";
+        StartCoroutine(menuHandler.ButtonDelay(
+            LevelClock.Instance.Resume
+        ));
     }
 
-    public void Play()
+    public void Restart()
     {
         StartCoroutine(menuHandler.ButtonDelay(
             () =>
             SceneManager.LoadScene(
-                SceneManager.GetActiveScene().buildIndex + 1
+                SceneManager.GetActiveScene().buildIndex
             )
         ));
     }
@@ -40,10 +39,12 @@ public class MainMenuHandler : MonoBehaviour
         ));
     }
 
-    public void Quit()
+    public void ReturnToMenu()
     {
         StartCoroutine(menuHandler.ButtonDelay(
-            Application.Quit
+            () => SceneManager.LoadScene(
+                SceneManager.GetActiveScene().buildIndex - 1
+            )
         ));
     }
 }

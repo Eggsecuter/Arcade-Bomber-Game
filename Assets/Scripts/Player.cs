@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public LevelGenerator Generator;
+    public GameObject GameOverScreen;
+    public GameObject NewHighScoreUI;
+    public GameObject HighScoreUI;
+    public GameObject ScoreUI;
+    public Score score;
     [HideInInspector] public int stamina;
 
     [SerializeField] private Image staminaUI = null;
@@ -20,6 +26,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        GameOverScreen.SetActive(false);
         _audioSource = GetComponent<AudioSource>();
 
         // Initialize stats
@@ -100,10 +107,23 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-        // Play Game Over Screen
+        int highscore = PlayerPrefs.GetInt("Highscore", 0);
 
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
+        bool newHighScore = highscore < score.score;
+        NewHighScoreUI.SetActive(newHighScore);
+        HighScoreUI.SetActive(!newHighScore);
+        ScoreUI.GetComponent<Text>().text = $"Score: {score.score}";
+
+        if (newHighScore)
+        {
+            PlayerPrefs.SetInt("Highscore", score.score);
+        }
+        else
+        {
+            HighScoreUI.GetComponent<Text>().text = $"High Score: {highscore}";
+        }
+
+        LevelClock.Instance.Pause(false);
+        GameOverScreen.SetActive(true);
     }
 }
