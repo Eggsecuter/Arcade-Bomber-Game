@@ -28,7 +28,7 @@ public class Score : MonoBehaviour
         score++;
         ScoreUI.text = score.ToString();
 
-        if (score % 3 == 0)
+        if (score % 10 == 0)
             StartCoroutine(nameof(IndicateCheckpoint));
     }
 
