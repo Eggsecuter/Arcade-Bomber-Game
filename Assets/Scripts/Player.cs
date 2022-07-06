@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int maxStamina = 3;
 
     private AudioSource _audioSource = null;
+    private Animator _animator;
     private readonly Queue<RowMovement> _movements = new Queue<RowMovement>();
     private RowMovement _movement;
     private int _health;
@@ -28,6 +29,9 @@ public class Player : MonoBehaviour
     {
         GameOverScreen.SetActive(false);
         _audioSource = GetComponent<AudioSource>();
+        _animator = GetComponent<Animator>();
+
+        _animator.speed = 1 / LevelClock.Instance.IntervalTime;
 
         // Initialize stats
         _health = maxHealth;

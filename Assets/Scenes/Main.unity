@@ -459,7 +459,7 @@ RectTransform:
   - {fileID: 1942383659}
   - {fileID: 733365329}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1496,7 +1496,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &733365328
 GameObject:
@@ -1884,7 +1884,7 @@ MonoBehaviour:
   stamina: 0
   staminaUI: {fileID: 1909130033}
   healthUI: {fileID: 1257140351}
-  maxHealth: 1
+  maxHealth: 3
   maxStamina: 3
 --- !u!224 &772400925
 RectTransform:
@@ -3643,6 +3643,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c78cbbffb146bb418af596dceb3c398, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musicVolumeSlider: {fileID: 1149866679}
+  sfxVolumeSlider: {fileID: 545500425}
   audioMixer: {fileID: 24100000, guid: 388504e71a63a6d4b845f6cd1da29e6b, type: 2}
   menuHandler: {fileID: 1942383662}
 --- !u!1 &1430639004
@@ -4252,6 +4254,50 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &1774152987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1774152989}
+  - component: {fileID: 1774152988}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1774152988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774152987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fa68bafaed29524b951957a51110626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 388504e71a63a6d4b845f6cd1da29e6b, type: 2}
+--- !u!4 &1774152989
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774152987}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1843664186
 GameObject:
   m_ObjectHideFlags: 0
