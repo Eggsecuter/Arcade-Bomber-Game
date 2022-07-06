@@ -8,6 +8,9 @@ public class LevelGenerator : MonoBehaviour
 {
     public Transform tileParent;
     public int Columns = 3, Rows = 5, MaxStraightPath = 1;
+    public BombType blackBomb;
+    public BombType redBomb;
+    public BombType greenBomb;
 
     [HideInInspector] public int pathTilesToPlayer = 0;
 
@@ -15,7 +18,6 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private GameObject _wall = null;
     [SerializeField] private GameObject _path = null;
     [SerializeField] private GameObject _bomb = null;
-    [SerializeField] private BombType[] _bombTypes = null;
     [SerializeField] private Sprite[] _pathSprites = null;
     [SerializeField] private Sprite[] _grassSprites = null;
 
@@ -26,9 +28,23 @@ public class LevelGenerator : MonoBehaviour
     private bool _rightAllowed = false;
     private bool _leftAllowed = false;
 
+    private BombType[][] bombCombos;
+    private BombType[] currentBombCombo;
+    private int bombComboIndex = 0;
+
     private void Awake()
     {
         _level = new RectTransform[Columns, Rows];
+
+        bombCombos = new BombType[][]
+        {
+            new BombType[] { greenBomb, blackBomb },
+            new BombType[] { redBomb, greenBomb, blackBomb, blackBomb },
+            new BombType[] { blackBomb, redBomb, blackBomb },
+            new BombType[] { blackBomb, blackBomb },
+            new BombType[] { redBomb, blackBomb, blackBomb },
+            new BombType[] { blackBomb, redBomb, greenBomb }
+        };
     }
 
     public RowMovement NextRow()
@@ -143,33 +159,26 @@ public class LevelGenerator : MonoBehaviour
 
         if (isPath)
         {
-            if (pathTilesToPlayer >= 2)
+            if (currentBombCombo == null && bombComboIndex >= 2)
             {
-                var bombType = GetBombType();
+                currentBombCombo = bombCombos[Random.Range(0, bombCombos.Length)];
+                bombComboIndex = 0;
+            }
 
-                if (!(bombType is null))
+            if (currentBombCombo != null)
+            {
+                var bomb = Instantiate(_bomb, _level[column, 0].transform);
+                bomb.GetComponent<Bomb>().Initialize(_player, pathTilesToPlayer, currentBombCombo[bombComboIndex].GetInstance());
+
+                if (bombComboIndex == currentBombCombo.Length - 1)
                 {
-                    var bomb = Instantiate(_bomb, _level[column, 0].transform);
-                    bomb.GetComponent<Bomb>().Initialize(_player, pathTilesToPlayer, bombType.GetInstance());
+                    currentBombCombo = null;
+                    bombComboIndex = 0;
                 }
             }
 
+            bombComboIndex++;
             pathTilesToPlayer++;
         }
-    }
-
-    private BombType GetBombType()
-    {
-        int index = Random.Range(0, 101);
-
-        foreach (BombType type in _bombTypes)
-        {
-            index -= type.SpawnProbability;
-
-            if (index <= 0)
-                return type;
-        }
-
-        return null; // place empty path
     }
 }

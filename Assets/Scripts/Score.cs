@@ -28,13 +28,15 @@ public class Score : MonoBehaviour
         score++;
         ScoreUI.text = score.ToString();
 
-        if (score % 10 == 0)
+        if (score % 3 == 0)
             StartCoroutine(nameof(IndicateCheckpoint));
     }
 
     private IEnumerator IndicateCheckpoint()
     {
         _audioSource.Play();
+
+        LevelClock.Instance.IncreaseSpeed();
         
         for (int i = 0; i < 4; i++)
         {

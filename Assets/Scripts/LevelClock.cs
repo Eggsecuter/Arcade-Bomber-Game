@@ -9,7 +9,9 @@ public class LevelClock : MonoBehaviour
 {
     public static LevelClock Instance;
     public GameObject PauseOverlay;
-    public float StartTime = 1f, IntervalTime = 1f;
+    public float StartTime = 1f;
+    [Range(.5f, .8f)]
+    public float IntervalTime = .8f;
     public Player Player;
     public event Action<bool> ClockTick;
 
@@ -17,6 +19,7 @@ public class LevelClock : MonoBehaviour
     private Animator _animator = null;
     private AudioSource _audioSource = null;
     private float _lastTick = 0f;
+    private float _resumeTickDelay = 0f;
 
     private void Awake()
     {
@@ -29,6 +32,7 @@ public class LevelClock : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponent<Animator>();
         _animator.speed = 0;
+        IntervalTime = .8f;
         yield return new WaitForSeconds(StartTime);
 
         if (!isPaused)
@@ -46,7 +50,8 @@ public class LevelClock : MonoBehaviour
 
     public void Resume()
     {
-        InvokeRepeating(nameof(Tick), Time.time % IntervalTime * IntervalTime, IntervalTime);
+        InvokeRepeating(nameof(Tick), _resumeTickDelay, IntervalTime);
+
         _animator.speed = 1 / IntervalTime;
         PauseOverlay.SetActive(false);
         isPaused = false;
@@ -54,10 +59,21 @@ public class LevelClock : MonoBehaviour
 
     public void Pause(bool pauseOverlay = true)
     {
+        _resumeTickDelay = IntervalTime - (Time.time - _lastTick);
         CancelInvoke(nameof(Tick));
         _animator.speed = 0;
         PauseOverlay.SetActive(pauseOverlay);
         isPaused = true;
+    }
+
+    public void IncreaseSpeed()
+    {
+        if (IntervalTime <= .5f)
+            return;
+
+        CancelInvoke(nameof(Tick));
+        IntervalTime -= .1f;
+        InvokeRepeating(nameof(Tick), IntervalTime, IntervalTime);
     }
 
     private void Tick()

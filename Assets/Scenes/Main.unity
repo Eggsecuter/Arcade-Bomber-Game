@@ -1315,7 +1315,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PauseOverlay: {fileID: 1942383658}
   StartTime: 1
-  IntervalTime: 0.8
+  IntervalTime: 1
   Player: {fileID: 772400924}
 --- !u!95 &560767860
 Animator:
@@ -3036,15 +3036,14 @@ MonoBehaviour:
   Columns: 3
   Rows: 6
   MaxStraightPath: 1
+  blackBomb: {fileID: 11400000, guid: 51796b079f2109046b3649601e9236e6, type: 2}
+  redBomb: {fileID: 11400000, guid: 88e60f63838a0b84fb7720d646aca57f, type: 2}
+  greenBomb: {fileID: 11400000, guid: 4cca66c8795f2a74c8c607e675687080, type: 2}
   pathTilesToPlayer: 0
   _player: {fileID: 772400924}
   _wall: {fileID: 8131027962154594663, guid: 1ad809ed7a657864386a1203e5a84a54, type: 3}
   _path: {fileID: 5446506772083523742, guid: f5fabd855ad47db468ef32196046a61e, type: 3}
   _bomb: {fileID: 2575553665585831619, guid: 3a2015e0155102f45a1ca4f38888f99b, type: 3}
-  _bombTypes:
-  - {fileID: 11400000, guid: 51796b079f2109046b3649601e9236e6, type: 2}
-  - {fileID: 11400000, guid: 88e60f63838a0b84fb7720d646aca57f, type: 2}
-  - {fileID: 11400000, guid: 4cca66c8795f2a74c8c607e675687080, type: 2}
   _pathSprites:
   - {fileID: 21300000, guid: 72e87cfaf0c853e48a6011ad279f575c, type: 3}
   - {fileID: 21300000, guid: 10e45fb02f380f34d94a65edbe87f406, type: 3}
