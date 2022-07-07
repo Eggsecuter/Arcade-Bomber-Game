@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     private readonly Queue<RowMovement> _movements = new Queue<RowMovement>();
     private RowMovement _movement;
     private int _health;
+    [HideInInspector] public bool spawnProtection = true;
 
     private void Start()
     {
@@ -70,8 +71,7 @@ public class Player : MonoBehaviour
     {
         if (!moved)
         {
-            if (stamina < maxStamina)
-                ChangeStamina(false);
+            ChangeStamina(false);
             return;
         }
 
@@ -100,10 +100,15 @@ public class Player : MonoBehaviour
         if (use)
         {
             stamina--;
+            spawnProtection = false;
         }
         else if (stamina < maxStamina)
         {
             stamina++;
+        }
+        else if (!spawnProtection)
+        {
+            TakeDamage();
         }
 
         staminaUI.fillAmount = 1f / maxStamina * stamina;

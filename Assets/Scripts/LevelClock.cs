@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
@@ -59,6 +60,8 @@ public class LevelClock : MonoBehaviour
 
     public void Pause(bool pauseOverlay = true)
     {
+        EventSystem.current.SetSelectedGameObject(null);
+        Player.spawnProtection = true;
         _resumeTickDelay = IntervalTime - (Time.time - _lastTick);
         CancelInvoke(nameof(Tick));
         _animator.speed = 0;
@@ -73,6 +76,7 @@ public class LevelClock : MonoBehaviour
 
         CancelInvoke(nameof(Tick));
         IntervalTime -= .1f;
+        _animator.speed = 1 / IntervalTime;
         InvokeRepeating(nameof(Tick), IntervalTime, IntervalTime);
     }
 

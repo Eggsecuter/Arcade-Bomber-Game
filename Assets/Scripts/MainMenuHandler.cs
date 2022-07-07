@@ -27,6 +27,16 @@ public class MainMenuHandler : MonoBehaviour
         ));
     }
 
+    public void Tutorial()
+    {
+        StartCoroutine(menuHandler.ButtonDelay(
+            () =>
+            SceneManager.LoadScene(
+                SceneManager.GetActiveScene().buildIndex + 2
+            )
+        ));
+    }
+
     public void ActivateOptionsMenu()
     {
         StartCoroutine(menuHandler.ButtonDelay(
